@@ -37,7 +37,7 @@ namespace KeycloakTesting.Controllers
 public class TestController : ControllerBase
 {
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "reader")]
     public IActionResult Get()
     {
         return Ok(new { message = "You are authorized!" });

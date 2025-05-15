@@ -1,4 +1,8 @@
 ﻿using KeycloakTesting.Controllers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +17,39 @@ builder.Services.AddAuthentication("Bearer")
         options.Authority = "http://localhost:8080/realms/myrealm"; // Keycloak realm
         options.Audience = "project"; // client_id
         options.RequireHttpsMetadata = false; // only for local/dev
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            RoleClaimType = "role", // this is important
+            NameClaimType = "preferred_username"
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+
+                var resourceAccess = context.Principal.FindFirst("resource_access")?.Value;
+                if (resourceAccess != null)
+                {
+                    var parsed = JObject.Parse(resourceAccess);
+                    var projectRoles = parsed["project"]?["roles"];
+                    if (projectRoles != null)
+                    {
+                        foreach (var role in projectRoles)
+                        {
+                            claimsIdentity.AddClaim(new Claim("role", role.ToString()));
+                        }
+                    }
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
+
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddHttpClient<UserController>();

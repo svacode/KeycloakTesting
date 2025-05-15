@@ -15,8 +15,8 @@ namespace KeycloakTesting.Controllers
         private readonly string _keycloakBaseUrl = "http://localhost:8080"; // Keycloak URL
         private readonly string _realm = "myrealm"; // Your Keycloak realm name
         private readonly string _adminClientId = "admin-cli"; // Admin client id
-        private readonly string _adminUsername = "admin"; // Admin username
-        private readonly string _adminPassword = "adminPassword"; // Admin password
+        private readonly string _adminUsername = "seva"; // Admin username
+        private readonly string _adminPassword = "seva99"; // Admin password
 
         public UserController(HttpClient httpClient)
         {
