@@ -40,7 +40,7 @@ public class TestController : ControllerBase
     [Authorize(Roles = "reader")]
     public IActionResult Get()
     {
-        return Ok(new { message = "You are authorized!" });
+        return Ok(new { message = "You are allowed to read it." });
     }
 }
 

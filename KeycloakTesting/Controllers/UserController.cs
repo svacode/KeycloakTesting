@@ -23,7 +23,7 @@ namespace KeycloakTesting.Controllers
             _httpClient = httpClient;
         }
 
-        // Endpoint to register user in Keycloak
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationRequest model)
         {
